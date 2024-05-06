@@ -18,13 +18,13 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    // shadcn
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
-  // shadcn
-  "baseUrl": ".",
-  "paths": {
-    "@/*": ["./src/*"]
-  },
-  "include": ["src", "@/components/ui", "@"],
+  "include": ["src", "@"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

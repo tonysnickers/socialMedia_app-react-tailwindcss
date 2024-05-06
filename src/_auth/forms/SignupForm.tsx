@@ -14,6 +14,7 @@ import { useForm } from "react-hook-form";
 import { formSchema } from "../../lib/validation";
 import { Loader } from "../../components/shared/Loader";
 import { Link } from "react-router-dom";
+import { createUserAccount } from "../../lib/appwrite/api";
 
 export const SignupForm = () => {
   const isLoading = false;
@@ -28,9 +29,10 @@ export const SignupForm = () => {
   });
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-  }
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    const newUser = await createUserAccount(values);
+    console.log(newUser);
+  };
   return (
     <Form {...form}>
       <div className="sm:w-420 flex-center flex-col">
