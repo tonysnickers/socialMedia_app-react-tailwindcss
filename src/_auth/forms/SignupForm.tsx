@@ -13,11 +13,27 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { formSchema } from "../../lib/validation";
 import { Loader } from "../../components/shared/Loader";
-import { Link } from "react-router-dom";
-import { createUserAccount } from "../../lib/appwrite/api";
+import { Link, useNavigate } from "react-router-dom";
+import React from "react";
+import { useToast } from "../../components/ui/use-toast";
+import {
+  useCreateUserAccount,
+  useSigninAccount,
+} from "../../lib/reac-query/queriesAndMutation";
+import { useUserContext } from "../../context/AuthContext";
 
 export const SignupForm = () => {
-  const isLoading = false;
+  const { toast } = useToast();
+  const navigate = useNavigate();
+
+  const { checkAuthUser, isLoading, isUserLoading } = useUserContext();
+
+  const { mutateAsync: createUserAccount, isLoading: isCreatingAccount } =
+    useCreateUserAccount();
+
+  const { mutateAsync: signInAccount, isLoading: isSigninIn } =
+    useSigninAccount();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -28,11 +44,32 @@ export const SignupForm = () => {
     },
   });
 
-  // 2. Define a submit handler.
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const newUser = await createUserAccount(values);
-    console.log(newUser);
+
+    if (!newUser) {
+      return toast({ title: "Sign up failed. Please try again" });
+    }
+
+    const session = await signInAccount({
+      email: values.email,
+      password: values.password,
+    });
+
+    if (!session) {
+      return toast({ title: "Sign in failed. Please try again" });
+    }
+
+    const isLoggedIn = await checkAuthUser();
+    if (isLoggedIn) {
+      form.reset();
+
+      navigate("/");
+    } else {
+      return toast({ title: "Sign in failed. Please try again" });
+    }
   };
+
   return (
     <Form {...form}>
       <div className="sm:w-420 flex-center flex-col">
