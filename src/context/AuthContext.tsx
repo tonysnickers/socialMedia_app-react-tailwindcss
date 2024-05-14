@@ -59,8 +59,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   useEffect(() => {
-    localStorage.getItem("cookiesFallback") === null;
-    if (localStorage.getItem("cookiesFallback") === "[]") navigate("/sign-in");
+    if (
+      localStorage.getItem("cookiesFallback") === "[]" ||
+      localStorage.getItem("cookiesFallback") === null
+    )
+      navigate("/sign-in");
     checkAuthUser();
   }, []);
 
@@ -75,5 +78,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
+
+export default AuthProvider;
 
 export const useUserContext = () => useContext(AuthContext);
