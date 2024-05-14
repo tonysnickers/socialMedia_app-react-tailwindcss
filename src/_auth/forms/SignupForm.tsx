@@ -11,7 +11,7 @@ import {
 import { Input } from "../../components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { formSchema } from "../../lib/validation";
+import { signupValidation } from "../../lib/validation";
 import { Loader } from "../../components/shared/Loader";
 import { Link, useNavigate } from "react-router-dom";
 import React from "react";
@@ -34,8 +34,8 @@ export const SignupForm = () => {
   const { mutateAsync: signInAccount, isPending: isSigninIn } =
     useSigninAccount();
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof signupValidation>>({
+    resolver: zodResolver(signupValidation),
     defaultValues: {
       name: "",
       username: "",
@@ -44,7 +44,7 @@ export const SignupForm = () => {
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+  const onSubmit = async (values: z.infer<typeof signupValidation>) => {
     const newUser = await createUserAccount(values);
 
     if (!newUser) {
