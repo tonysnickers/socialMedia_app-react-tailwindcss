@@ -36,8 +36,6 @@ export const SigninForm = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof signinValidation>) => {
-    console.log(values);
-
     const session = await signInAccount({
       email: values.email,
       password: values.password,
@@ -48,6 +46,7 @@ export const SigninForm = () => {
     }
 
     const isLoggedIn = await checkAuthUser();
+
     if (isLoggedIn) {
       form.reset();
 
