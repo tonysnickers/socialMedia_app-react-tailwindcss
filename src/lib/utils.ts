@@ -21,3 +21,7 @@ export const formatRelativeTime = (dateString: string): string => {
 const dateString = "2024-05-20T17:26:36.791+00:00";
 const result = formatRelativeTime(dateString);
 console.log(result); // Output will be something like "2 days ago" or "in 2 hours"
+
+export const checkIsLiked = (likeList: string[], userId: string) => {
+  return likeList.includes(userId);
+};

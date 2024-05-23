@@ -209,7 +209,27 @@ export const likePost = async (postId: string, likesArray: string[]) => {
   }
 };
 
-export const savePost = async (savedRecordId: string) => {
+export const savePost = async (userId: string, postId: string) => {
+  try {
+    const updatedpost = await databases.createDocument(
+      appwriteConfig.databasesId,
+      appwriteConfig.savesCollectionId,
+      ID.unique(),
+      {
+        user: userId,
+        post: postId,
+      }
+    );
+
+    if (!updatedpost) throw Error;
+
+    return updatedpost;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const deleteSavedPost = async (savedRecordId: string) => {
   try {
     const statusCode = await databases.deleteDocument(
       appwriteConfig.databasesId,
