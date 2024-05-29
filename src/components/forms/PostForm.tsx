@@ -20,14 +20,22 @@ import { Models } from "appwrite";
 import { useUserContext } from "../../context/AuthContext";
 import { toast } from "../ui/use-toast";
 import { useNavigate } from "react-router-dom";
-import { useCreatePost } from "../../lib/reac-query/queriesAndMutation";
+import {
+  useCreatePost,
+  useUpdatePost,
+} from "../../lib/reac-query/queriesAndMutation";
+import { Toast } from "../ui/toast";
 
 type PostFormProps = {
   post?: Models.Document;
+  action: "Create" | "Update";
 };
 
-const PostForm = ({ post }: PostFormProps) => {
-  const { mutateAsync: createPost } = useCreatePost();
+const PostForm = ({ post, action }: PostFormProps) => {
+  const { mutateAsync: createPost, isPending: isLoadingCreate } =
+    useCreatePost();
+  const { mutateAsync: updatePost, isPending: isLoadingUpdate } =
+    useUpdatePost();
 
   const { user } = useUserContext();
   const navigate = useNavigate();
@@ -38,11 +46,24 @@ const PostForm = ({ post }: PostFormProps) => {
       caption: post ? post?.caption : "",
       file: [],
       location: post ? post?.location : "",
-      tags: post ? post.Tags.join(",") : "",
+      tags: post ? post.tags.join(",") : "",
     },
   });
 
   const onSubmit = async (values: z.infer<typeof PostValidation>) => {
+    if (post && action === "Update") {
+      const updatedPost = await updatePost({
+        ...values,
+        postId: post.$id,
+        imageId: post?.imageId,
+        imageUrl: post?.imageUrl,
+      });
+      if (!updatedPost) {
+        Toast({ title: "Please try again" });
+      }
+      navigate(`/posts/${post.$id}`);
+    }
+
     const newPost = await createPost({
       ...values,
       userId: user.id,
@@ -133,8 +154,10 @@ const PostForm = ({ post }: PostFormProps) => {
           <Button
             type="submit"
             className="shad-button_primary whitespace-nowrap"
+            disabled={isLoadingCreate || isLoadingUpdate}
           >
-            Submit
+            {isLoadingCreate || (isLoadingUpdate && "loading...")}
+            {action} Post
           </Button>
         </div>
       </form>
