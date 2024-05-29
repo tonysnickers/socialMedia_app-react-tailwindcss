@@ -1,5 +1,10 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { INewPost, INewUser } from "../../types";
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  QueryClient,
+} from "@tanstack/react-query";
+import { INewPost, INewUser, IUpdatePost } from "../../types";
 import {
   createPost,
   createUserAccount,
@@ -11,6 +16,7 @@ import {
   savePost,
   signOutAccount,
   signinAccount,
+  updatePost,
 } from "../appwrite/api";
 import { QUERY_KEYS } from "./queryKeys";
 
@@ -130,5 +136,17 @@ export const useGetPostById = (postId: string) => {
     queryKey: [QUERY_KEYS.GET_POST_BY_ID, postId],
     queryFn: () => getPostById(postId),
     enabled: !!postId,
+  });
+};
+export const useUpdatePost = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (post: IUpdatePost) => updatePost(post),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_POST_BY_ID, data?.$id],
+      });
+    },
   });
 };
