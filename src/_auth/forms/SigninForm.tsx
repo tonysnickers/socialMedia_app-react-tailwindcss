@@ -60,7 +60,10 @@ export const SigninForm = () => {
     <Form {...form}>
       <div className="sm:w-420 flex-center flex-col">
         <img src="../../../public/assets/images/logo.svg" alt="" />
-        <h2 className="h3-bold md:h2-bold pt-5 sm:pt-12">
+        <h2
+          className="h3-bold md:h2-bold pt-5 sm:pt-12"
+          data-testid="cypress-login-title"
+        >
           Log in to your account
         </h2>
         <p className="text-light-3 small-medium md:base-regular mt-2">
@@ -78,7 +81,12 @@ export const SigninForm = () => {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input type="email" className="shad-input" {...field} />
+                  <Input
+                    data-testid="cypress-login-emailInput"
+                    type="email"
+                    className="shad-input"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -91,13 +99,22 @@ export const SigninForm = () => {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input type="password" className="shad-input" {...field} />
+                  <Input
+                    data-testid="cypress-login-passwordInput"
+                    type="password"
+                    className="shad-input"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <Button type="submit" className="shad-button_primary">
+          <Button
+            type="submit"
+            className="shad-button_primary"
+            data-testid="cypress-login-signin-btn"
+          >
             {isUserLoading ? (
               <div className="flex-center gap-2">
                 <Loader />

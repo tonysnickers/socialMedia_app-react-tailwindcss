@@ -7,7 +7,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export const formatRelativeTime = (dateString: string): string => {
+export const formatRelativeTime = (dateString: string) => {
   // Parse the date string into a Date object
   const date = parseISO(dateString);
 
