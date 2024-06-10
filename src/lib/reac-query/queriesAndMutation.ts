@@ -3,6 +3,7 @@ import {
   useQuery,
   useQueryClient,
   QueryClient,
+  useInfiniteQuery,
 } from "@tanstack/react-query";
 import { INewPost, INewUser, IUpdatePost } from "../../types";
 import {
@@ -10,10 +11,12 @@ import {
   createUserAccount,
   deleteSavedPost,
   getCurrentUser,
+  getInfiniPosts,
   getPostById,
   getRecentPosts,
   likePost,
   savePost,
+  searchPosts,
   signOutAccount,
   signinAccount,
   updatePost,
@@ -148,5 +151,26 @@ export const useUpdatePost = () => {
         queryKey: [QUERY_KEYS.GET_POST_BY_ID, data?.$id],
       });
     },
+  });
+};
+
+export const useGetPosts = () => {
+  return useInfiniteQuery({
+    queryKey: [QUERY_KEYS.GET_INFINITE_POSTS],
+    queryFn: getInfiniPosts,
+    getNextPageParam: (lastpage) => {
+      if (lastpage && lastpage.documents.length === 0) return null;
+      const lastId = lastpage?.documents[lastpage.documents.length - 1].$id;
+
+      return lastId;
+    },
+  });
+};
+
+export const useSearchPosts = (searchTerm: string) => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.SEARCH_POSTS],
+    queryFn: () => searchPosts(searchTerm),
+    enabled: !!searchTerm,
   });
 };

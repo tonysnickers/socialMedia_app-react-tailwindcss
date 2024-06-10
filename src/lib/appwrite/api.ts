@@ -3,6 +3,7 @@ import { INewUser, IUpdatePost } from "../../types";
 import { account, appwriteConfig, avatars, databases, storage } from "./config";
 import { Query } from "appwrite";
 import { INewPost } from "../../types/index";
+import { param } from "node_modules/cypress/types/jquery";
 
 export const createUserAccount = async (user: INewUser) => {
   try {
@@ -304,6 +305,48 @@ export const updatePost = async (post: IUpdatePost) => {
     }
 
     return updatedPost;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getInfiniPosts = async ({
+  pageParams,
+}: {
+  pageParams: number;
+}) => {
+  const queries: any[] = [Query.orderDesc("$updatedAt"), Query.limit(10)];
+
+  if (pageParams) {
+    queries.push(Query.cursorAfter(pageParams.toString()));
+  }
+
+  try {
+    const posts = await databases.listDocuments(
+      appwriteConfig.databasesId,
+      appwriteConfig.postCollectionId,
+      queries
+    );
+
+    if (!posts) throw Error;
+
+    return posts;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const searchPosts = async (searchTerm: string) => {
+  try {
+    const posts = await databases.listDocuments(
+      appwriteConfig.databasesId,
+      appwriteConfig.postCollectionId,
+      [Query.search("caption", searchTerm)]
+    );
+
+    if (!posts) throw Error;
+
+    return posts;
   } catch (error) {
     console.log(error);
   }
