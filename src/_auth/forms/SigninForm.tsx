@@ -25,7 +25,8 @@ export const SigninForm = () => {
 
   const { checkAuthUser, isLoading: isUserLoading } = useUserContext();
 
-  const { mutateAsync: signInAccount } = useSigninAccount();
+  const { mutateAsync: signInAccount, isPending: isLoading } =
+    useSigninAccount();
 
   const form = useForm<z.infer<typeof signinValidation>>({
     resolver: zodResolver(signinValidation),
@@ -35,7 +36,7 @@ export const SigninForm = () => {
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof signinValidation>) => {
+  const handleSignin = async (values: z.infer<typeof signinValidation>) => {
     const session = await signInAccount({
       email: values.email,
       password: values.password,
@@ -59,7 +60,8 @@ export const SigninForm = () => {
   return (
     <Form {...form}>
       <div className="sm:w-420 flex-center flex-col">
-        <img src="../../../public/assets/images/logo.svg" alt="" />
+        <img src="/assets/images/logo.svg" alt="logo" />
+
         <h2
           className="h3-bold md:h2-bold pt-5 sm:pt-12"
           data-testid="cypress-login-title"
@@ -67,11 +69,10 @@ export const SigninForm = () => {
           Log in to your account
         </h2>
         <p className="text-light-3 small-medium md:base-regular mt-2">
-          Welcome back! Please enter your details
+          Welcome back! Please enter your details.
         </p>
-
         <form
-          onSubmit={form.handleSubmit(onSubmit)}
+          onSubmit={form.handleSubmit(handleSignin)}
           className="flex flex-col gap-5 w-full mt-4"
         >
           <FormField
@@ -79,53 +80,55 @@ export const SigninForm = () => {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel className="shad-form_label">Email</FormLabel>
                 <FormControl>
                   <Input
-                    data-testid="cypress-login-emailInput"
-                    type="email"
+                    type="text"
                     className="shad-input"
                     {...field}
+                    data-testid="cypress-login-emailInput"
                   />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
+
           <FormField
             control={form.control}
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Password</FormLabel>
+                <FormLabel className="shad-form_label">Password</FormLabel>
                 <FormControl>
                   <Input
-                    data-testid="cypress-login-passwordInput"
                     type="password"
                     className="shad-input"
                     {...field}
+                    data-testid="cypress-login-passwordInput"
                   />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
+
           <Button
             type="submit"
             className="shad-button_primary"
             data-testid="cypress-login-signin-btn"
           >
-            {isUserLoading ? (
+            {isLoading || isUserLoading ? (
               <div className="flex-center gap-2">
-                <Loader />
-                Loading...
+                <Loader /> Loading...
               </div>
             ) : (
-              "Sign in"
+              "Log in"
             )}
           </Button>
+
           <p className="text-small-regular text-light-2 text-center mt-2">
-            Don't have an account?
+            Don&apos;t have an account?
             <Link
               to="/sign-up"
               className="text-primary-500 text-small-semibold ml-1"
@@ -138,3 +141,5 @@ export const SigninForm = () => {
     </Form>
   );
 };
+
+export default SigninForm;
