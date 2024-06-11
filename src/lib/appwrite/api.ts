@@ -3,7 +3,6 @@ import { INewUser, IUpdatePost } from "../../types";
 import { account, appwriteConfig, avatars, databases, storage } from "./config";
 import { Query } from "appwrite";
 import { INewPost } from "../../types/index";
-import { param } from "node_modules/cypress/types/jquery";
 
 export const createUserAccount = async (user: INewUser) => {
   try {
@@ -243,6 +242,7 @@ export const deleteSavedPost = async (savedRecordId: string) => {
     return { status: "ok saved deleted" };
   } catch (error) {
     console.log(error);
+    return error;
   }
 };
 
@@ -256,7 +256,7 @@ export const getPostById = async (postId: string) => {
     return post;
   } catch (error) {
     console.log(error);
-    // return error;
+    return error;
   }
 };
 
@@ -307,6 +307,7 @@ export const updatePost = async (post: IUpdatePost) => {
     return updatedPost;
   } catch (error) {
     console.log(error);
+    return error;
   }
 };
 
@@ -333,6 +334,7 @@ export const getInfiniPosts = async ({
     return posts;
   } catch (error) {
     console.log(error);
+    return error;
   }
 };
 
@@ -349,5 +351,6 @@ export const searchPosts = async (searchTerm: string) => {
     return posts;
   } catch (error) {
     console.log(error);
+    return error;
   }
 };
