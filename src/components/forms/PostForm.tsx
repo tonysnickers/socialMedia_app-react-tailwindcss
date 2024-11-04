@@ -43,6 +43,7 @@ const PostForm = ({ post, action }: PostFormProps) => {
       tags: post ? post.tags.join(",") : "",
     },
   });
+  console.log(action);
 
   // Query
   const { mutateAsync: createPost, isPending: isLoadingCreate } =
@@ -98,6 +99,7 @@ const PostForm = ({ post, action }: PostFormProps) => {
               <FormControl>
                 <Textarea
                   className="shad-textarea custom-scrollbar"
+                  data-testid="snapgram-createPost-captionTextarea"
                   {...field}
                 />
               </FormControl>
@@ -130,7 +132,12 @@ const PostForm = ({ post, action }: PostFormProps) => {
             <FormItem>
               <FormLabel className="shad-form_label">Add Location</FormLabel>
               <FormControl>
-                <Input type="text" className="shad-input" {...field} />
+                <Input
+                  type="text"
+                  className="shad-input"
+                  {...field}
+                  data-testid="snapgram-createPost-addLocationInput"
+                />
               </FormControl>
               <FormMessage className="shad-form_message" />
             </FormItem>
@@ -151,6 +158,7 @@ const PostForm = ({ post, action }: PostFormProps) => {
                   type="text"
                   className="shad-input"
                   {...field}
+                  data-testid="snapgram-createPost-addTagsInput"
                 />
               </FormControl>
               <FormMessage className="shad-form_message" />
@@ -170,6 +178,7 @@ const PostForm = ({ post, action }: PostFormProps) => {
             type="submit"
             className="shad-button_primary whitespace-nowrap"
             disabled={isLoadingCreate || isLoadingUpdate}
+            data-testid={`snapgram-${action}Post-button`}
           >
             {(isLoadingCreate || isLoadingUpdate) && <Loader />}
             {action} Post

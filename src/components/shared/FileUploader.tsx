@@ -31,7 +31,12 @@ const FileUploader = ({ fieldChange, mediaUrl }: FileUploaderProps) => {
       {...getRootProps()}
       className="flex flex-center flex-col bg-dark-3 rounded-xl cursor-pointer"
     >
-      <input {...getInputProps()} className="cursor-pointer" />
+      <input
+        {...getInputProps()}
+        type="file"
+        className="cursor-pointer"
+        data-testid="snapgram-createPost-addImage"
+      />
       {fileUrl ? (
         <>
           <div className="flex flex-1 justify-center w-full p-5 lg:p-10">
