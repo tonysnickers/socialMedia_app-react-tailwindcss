@@ -55,8 +55,9 @@ const LeftSidebar = () => {
         )}
 
         <ul className="flex flex-col gap-6">
-          {sidebarLinks.map((link: INavLink) => {
+          {sidebarLinks.map((link: INavLink, index) => {
             const isActive = pathname === link.route;
+            console.log(link);
 
             return (
               <li
@@ -64,6 +65,7 @@ const LeftSidebar = () => {
                 className={`leftsidebar-link group ${
                   isActive && "bg-primary-500"
                 }`}
+                data-testid={`cypress-leftSideBar-${index}`}
               >
                 <NavLink
                   to={link.route}
